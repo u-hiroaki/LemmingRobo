@@ -63,6 +63,9 @@
     <ClCompile Include="CGameStage.cpp">
       <Filter>ソース ファイル\レミングスゲーム部</Filter>
     </ClCompile>
+    <ClCompile Include="CGameStageBlock.cpp">
+      <Filter>ソース ファイル\レミングスゲーム部</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C2DBuffer.h">
@@ -120,6 +123,9 @@
       <Filter>ヘッダー ファイル\レミングスゲーム部</Filter>
     </ClInclude>
     <ClInclude Include="CGameStageBlock.h">
+      <Filter>ヘッダー ファイル\レミングスゲーム部</Filter>
+    </ClInclude>
+    <ClInclude Include="CGameCharactor.h">
       <Filter>ヘッダー ファイル\レミングスゲーム部</Filter>
     </ClInclude>
   </ItemGroup>

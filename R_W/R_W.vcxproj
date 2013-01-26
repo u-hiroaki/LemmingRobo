@@ -97,6 +97,7 @@
     <ClCompile Include="CDirectXDevice.cpp" />
     <ClCompile Include="CEffect.cpp" />
     <ClCompile Include="CGameStage.cpp" />
+    <ClCompile Include="CGameStageBlock.cpp" />
     <ClCompile Include="CMainWindow.cpp" />
     <ClCompile Include="CSequenceDummy.cpp" />
     <ClCompile Include="CSequenceTitle.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="CDebugConsole.h" />
     <ClInclude Include="CDirectXDevice.h" />
     <ClInclude Include="CEffect.h" />
+    <ClInclude Include="CGameCharactor.h" />
     <ClInclude Include="CGameStage.h" />
     <ClInclude Include="CGameStageBlock.h" />
     <ClInclude Include="CMainWindow.h" />

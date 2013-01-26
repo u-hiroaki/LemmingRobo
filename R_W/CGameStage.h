@@ -2,6 +2,7 @@
 #define ___CGAME_STAGE_H_2013_01_20___
 #include <cstring>
 #include "DXTemplateUtility.h"
+#include "CGameStageBlock.h"
 
 //ステージ情報の管理クラス
 //ステージサイズは20x20(30x30ドット)
@@ -12,8 +13,11 @@ public:
     ~CGameStage(){}
     void Render(){}
     void Update();
+    void Initilize(){}
 protected:
     char m_StageInfo[20][20];
+    CGameStageBlock m_Blocks[20][20];
     tComPtr<IDirect3DTexture9> blocktex[16];
+    CGameCharactor robots;
 };
 #endif//___CGAME_STAGE_H_2013_01_20___
