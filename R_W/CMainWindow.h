@@ -26,7 +26,7 @@ private:
     ~CMainWindow(){};
 	CMainWindow(CMainWindow& obj){};
 	void operator=(CMainWindow& obj){};
-    CSequenceDummy m_sequence;
+    CSequenceTitle m_sequence;
 	CFPSCounter m_fpsc;
 protected:
     void HookKey(WPARAM,LPARAM);

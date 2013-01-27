@@ -15,9 +15,9 @@ void CGameStageBlock::Render()
     m_buffer.draw();
 }
 
-void CGameStageBlock::Initialize(const int in_x,const int in_y,)
+void CGameStageBlock::Initialize(const int in_x,const int in_y,const float in_u,const float in_v)
 {
     m_buffer.setActivity(true);
     m_buffer.setPos(in_x,in_y);
-    m_buffer.setUV();
+    m_buffer.setUV(in_u,in_v,30.0f/128.0f,30.0f/128.0f);
 }

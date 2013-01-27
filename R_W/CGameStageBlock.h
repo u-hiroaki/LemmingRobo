@@ -14,7 +14,7 @@ public:
     void Render();
 private:
     UpdateFunc UpdateFuncTable[8];//ŠÖ”ƒe[ƒuƒ‹
-    bool InnerUpdateNormal(CGameCharactor&){};
+    bool InnerUpdateNormal(CGameCharactor&){return true;};
     C2DBuffer m_buffer;
 };
 
