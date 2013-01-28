@@ -9,7 +9,7 @@ class CGameStageBlock
 public:
     CGameStageBlock();
     ~CGameStageBlock(){}
-    void Initialize(const int,const int,const float u,const float v);
+    void Initialize(const int,const int,const int);
     bool Update(const char,CGameCharactor&);
     void Render();
 private:

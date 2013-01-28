@@ -100,6 +100,7 @@
     <ClCompile Include="CGameStageBlock.cpp" />
     <ClCompile Include="CMainWindow.cpp" />
     <ClCompile Include="CSequenceDummy.cpp" />
+    <ClCompile Include="CSequenceGame.cpp" />
     <ClCompile Include="CSequenceTitle.cpp" />
     <ClCompile Include="FPSCounter.cpp" />
     <ClCompile Include="main.cpp" />

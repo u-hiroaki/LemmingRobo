@@ -1,11 +1,17 @@
 #include "CGameStage.h"
 
+void CGameStage::Initilize()
+{
+    for(int i=0;i<MAX_STAGE_HEIGHT;++i)
+        for(int j=0;j<MAX_STAGE_WIDTH;++j)
+            m_Blocks[i][j].Initialize(i,j,0);
+}
+
 void CGameStage::Update()
 {
-    for(int i=0;i<20;++i)
-        for(int j=0;j<20;++j)
+    for(int i=0;i<MAX_STAGE_HEIGHT;++i)
+        for(int j=0;j<MAX_STAGE_WIDTH;++j)
         {
-           if( m_Blocks[i][j].Update(this->m_StageInfo[i][j],robots))
                m_Blocks[i][j].Render();
         }
 }

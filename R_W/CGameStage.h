@@ -4,19 +4,21 @@
 #include "DXTemplateUtility.h"
 #include "CGameStageBlock.h"
 
+#define MAX_STAGE_WIDTH 20
+#define MAX_STAGE_HEIGHT 20
+#define MAX_BLOCK_NUM MAX_STAGE_HEIGHT*MAX_STAGE_WIDTH
+
 //ステージ情報の管理クラス
 //ステージサイズは20x20(30x30ドット)
 class CGameStage{
 public:
-    CGameStage()
-    {std::memset(m_StageInfo,0,sizeof(char)*20*20 );}
+    CGameStage(){}
     ~CGameStage(){}
     void Render(){}
     void Update();
-    void Initilize(){}
+    void Initilize();
 protected:
-    char m_StageInfo[20][20];
-    CGameStageBlock m_Blocks[20][20];
+    CGameStageBlock m_Blocks[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];
     tComPtr<IDirect3DTexture9> blocktex[16];
     CGameCharactor robots;
 };

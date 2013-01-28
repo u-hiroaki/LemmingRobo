@@ -13,6 +13,7 @@ public:
     void  Update();
 private:
     C2DSprite m_bg;
+    C2DSprite tile[20][20];
     bool InnerInit();
 };
 
