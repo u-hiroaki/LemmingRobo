@@ -3,12 +3,21 @@
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib, "d3dx9.lib")
 
+    struct tagVertexFMT
+    {
+        float x,y,z;
+        float u,v;
+        float instance;
+    };
+
 	std::list<C2DBuffer*> C2DBuffer::drawObjectList;
     std::vector<float>      C2DBuffer::drawBuffer;
 	IDirect3DVertexDeclaration9 *C2DBuffer::decl;
 	ID3DXEffect *C2DBuffer::effect;
     tComPtr< IDirect3DTexture9> C2DBuffer::tex;
     IDirect3DVertexBuffer9* C2DBuffer::vBuff=NULL;
+    IDirect3DIndexBuffer9* C2DBuffer::iBuff=NULL;
+    int C2DBuffer::BatchNum = 120;
     int C2DBuffer::scH = 600;
     int C2DBuffer::scW = 800;
 
@@ -56,9 +65,13 @@
 
 	// 共通頂点バッファ作成
 	void C2DBuffer::begin_first( IDirect3DDevice9* dev ) {
+        HRESULT hr; 
+        if(NULL==vBuff)
+            dev->CreateVertexBuffer(BatchNum* 4*sizeof(tagVertexFMT),0,0,D3DPOOL_MANAGED,&C2DBuffer::vBuff,0);
+        if(NULL==iBuff)
+            dev->CreateIndexBuffer(BatchNum*2*3*sizeof(WORD),0,D3DFMT_INDEX16,
+            D3DPOOL_MANAGED,&C2DBuffer::iBuff,0);
 
-        //if(vBuff == 0)
-        //    dev->CreateVertexBuffer()
 		// シェーダ作成
 		if (effect == 0) {
 			ID3DXBuffer *error = 0;
@@ -73,10 +86,19 @@
 			D3DVERTEXELEMENT9 elems[] = {
 				{0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 				{0, sizeof(float) * 3, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
+                {0,sizeof(float)*5,D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
 				D3DDECL_END()
 			};
 			dev->CreateVertexDeclaration( elems, &decl );
 		}
+        tagVertexFMT* pVFMT;
+        hr = iBuff->Lock(0,NULL,(void**)&pVFMT,0);
+        if(FAILED(hr))
+         {
+             iBuff->Release();
+        }
+        else{
+        }
         drawBuffer.reserve(6*5*1000);
 	}
 

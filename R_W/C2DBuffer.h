@@ -18,8 +18,9 @@
 
 class C2DBuffer
 {
-    static IDirect3DVertexBuffer9* vBuff;
-    static IDirect3DVertexBuffer9* streamBuff;
+    static IDirect3DVertexBuffer9*  vBuff;
+    static IDirect3DIndexBuffer9*   iBuff;
+    static int                                          BatchNum;
     static std::list<C2DBuffer*> drawObjectList;		// •`‰æ‘ÎÛƒŠƒXƒg
     static std::vector<float>      drawBuffer;
     static IDirect3DVertexDeclaration9 *decl;	// ‹¤’Ê’¸“_éŒ¾
