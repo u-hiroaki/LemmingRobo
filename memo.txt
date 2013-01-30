@@ -1,3 +1,142 @@
+
+
+void OnRenderShaderInstancing( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTime )
+{
+    HRESULT hr;
+    UINT iPass, cPasses;
+
+    V( pd3dDevice->SetVertexDeclaration( g_pVertexDeclShader ) );
+
+    // Stream zero is our model
+    V( pd3dDevice->SetStreamSource( 0, g_pVBBox, 0, sizeof( BOX_VERTEX_INSTANCE ) ) );
+    V( pd3dDevice->SetIndices( g_pIBBox ) );
+
+    // Render the scene with this technique
+    // as defined in the .fx file
+    V( g_pEffect->SetTechnique( g_HandleTechnique ) );
+
+    V( g_pEffect->Begin( &cPasses, 0 ) );
+    for( iPass = 0; iPass < cPasses; iPass++ )
+    {
+        V( g_pEffect->BeginPass( iPass ) );
+
+        // Render the boxes with the applied technique
+        V( g_pEffect->SetTexture( g_HandleTexture, g_pBoxTexture ) );
+
+        int nRemainingBoxes = g_NumBoxes;
+        while( nRemainingBoxes > 0 )
+        {
+            // determine how many instances are in this batch (up to g_nNumBatchInstance)           
+            int nRenderBoxes = min( nRemainingBoxes, g_nNumBatchInstance );
+
+            // set the box Instancing array
+            V( g_pEffect->SetVectorArray( g_HandleBoxInstance_Position, g_vBoxInstance_Position + g_NumBoxes -
+                                          nRemainingBoxes, nRenderBoxes ) );
+            V( g_pEffect->SetVectorArray( g_HandleBoxInstance_Color, ( D3DXVECTOR4* )
+                                          ( g_vBoxInstance_Color + g_NumBoxes - nRemainingBoxes ), nRenderBoxes ) );
+
+            // The effect interface queues up the changes and performs them 
+            // with the CommitChanges call. You do not need to call CommitChanges if 
+            // you are not setting any parameters between the BeginPass and EndPass.
+            V( g_pEffect->CommitChanges() );
+
+            V( pd3dDevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, nRenderBoxes * 4 * 6, 0,
+                                                 nRenderBoxes * 6 * 2 ) );
+
+            // subtract the rendered boxes from the remaining boxes
+            nRemainingBoxes -= nRenderBoxes;
+        }
+
+        V( g_pEffect->EndPass() );
+    }
+    V( g_pEffect->End() );
+}
+
+
+{
+        g_HandleTechnique = g_pEffect->GetTechniqueByName( "TShader_Instancing" );
+        g_HandleBoxInstance_Position = g_pEffect->GetParameterBySemantic( NULL, "BOXINSTANCEARRAY_POSITION" );
+        g_HandleBoxInstance_Color = g_pEffect->GetParameterBySemantic( NULL, "BOXINSTANCEARRAY_COLOR" );
+
+        // First create the vertex declaration we need
+        V_RETURN( pd3dDevice->CreateVertexDeclaration( g_VertexElemShader, &g_pVertexDeclShader ) );
+
+        // Build a VB to hold the position data. Four vertices on six faces of the box
+        // Create g_nNumBatchInstance copies
+        V_RETURN( pd3dDevice->CreateVertexBuffer( g_nNumBatchInstance * 4 * 6 * sizeof( BOX_VERTEX_INSTANCE ), 0, 0,
+                                                  D3DPOOL_MANAGED, &g_pVBBox, 0 ) );
+
+        // And an IB to go with it. We will be rendering
+        // a list of independent tris, and each box face has two tris, so the box will have
+        // 6 * 2 * 3 indices
+        V_RETURN( pd3dDevice->CreateIndexBuffer( g_nNumBatchInstance * ( 6 * 2 * 3 ) * sizeof( WORD ), 0,
+                                                 D3DFMT_INDEX16, D3DPOOL_MANAGED, &g_pIBBox, 0 ) );
+
+        // Now, lock and fill the model VB and IB
+        BOX_VERTEX_INSTANCE* pVerts;
+
+        hr = g_pVBBox->Lock( 0, NULL, ( void** )&pVerts, 0 );
+
+        if( SUCCEEDED( hr ) )
+        {
+            WORD* pIndices;
+            hr = g_pIBBox->Lock( 0, NULL, ( void** )&pIndices, 0 );
+
+            if( SUCCEEDED( hr ) )
+            {
+                for( WORD iInstance = 0; iInstance < g_nNumBatchInstance; iInstance++ )
+                {
+                    FillFaceInstance( pVerts, pIndices, 0,
+                                      D3DXVECTOR3( 0.f, 0.f, -1.f ),
+                                      D3DXVECTOR3( 0.f, 0.f, -1.f ),
+                                      D3DXVECTOR3( 0.f, 1.f, 0.f ),
+                                      iInstance );
+
+                    FillFaceInstance( pVerts, pIndices, 1,
+                                      D3DXVECTOR3( 0.f, 0.f, 1.f ),
+                                      D3DXVECTOR3( 0.f, 0.f, 1.f ),
+                                      D3DXVECTOR3( 0.f, 1.f, 0.f ),
+                                      iInstance );
+
+                    FillFaceInstance( pVerts, pIndices, 2,
+                                      D3DXVECTOR3( 1.f, 0.f, 0.f ),
+                                      D3DXVECTOR3( 1.f, 0.f, 0.f ),
+                                      D3DXVECTOR3( 0.f, 1.f, 0.f ),
+                                      iInstance );
+
+                    FillFaceInstance( pVerts, pIndices, 3,
+                                      D3DXVECTOR3( -1.f, 0.f, 0.f ),
+                                      D3DXVECTOR3( -1.f, 0.f, 0.f ),
+                                      D3DXVECTOR3( 0.f, 1.f, 0.f ),
+                                      iInstance );
+
+                    FillFaceInstance( pVerts, pIndices, 4,
+                                      D3DXVECTOR3( 0.f, 1.f, 0.f ),
+                                      D3DXVECTOR3( 0.f, 1.f, 0.f ),
+                                      D3DXVECTOR3( 1.f, 0.f, 0.f ),
+                                      iInstance );
+
+                    FillFaceInstance( pVerts, pIndices, 5,
+                                      D3DXVECTOR3( 0.f, -1.f, 0.f ),
+                                      D3DXVECTOR3( 0.f, -1.f, 0.f ),
+                                      D3DXVECTOR3( 1.f, 0.f, 0.f ),
+                                      iInstance );
+                }
+
+                g_pIBBox->Unlock();
+            }
+            else
+            {
+                DXUT_ERR( L"Could not lock box model IB", hr );
+            }
+            g_pVBBox->Unlock();
+        }
+        else
+        {
+            DXUT_ERR( L"Could not lock box model VB", hr );
+        }
+}
+
 TODO:ジオメトリーインスタンシングの実装
 	大量の物を描画する際の高速化のため。
 	早くならなかったら残念だけど

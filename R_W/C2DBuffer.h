@@ -10,11 +10,16 @@
 弾幕とか
 エネミー祭りとか
 そんな感じ
+
+テクスチャへのポインタと優先度をpairにしてmultimapのキーにする?
+で、実体を何とかで管理?
+ぬーん･･･
 *********************************************************/
 
 class C2DBuffer
 {
     static IDirect3DVertexBuffer9* vBuff;
+    static IDirect3DVertexBuffer9* streamBuff;
     static std::list<C2DBuffer*> drawObjectList;		// 描画対象リスト
     static std::vector<float>      drawBuffer;
     static IDirect3DVertexDeclaration9 *decl;	// 共通頂点宣言
