@@ -15,8 +15,8 @@
 	IDirect3DVertexDeclaration9 *C2DBuffer::decl;
 	ID3DXEffect *C2DBuffer::effect;
     tComPtr< IDirect3DTexture9> C2DBuffer::tex;
-    IDirect3DVertexBuffer9* C2DBuffer::vBuff=NULL;
-    IDirect3DIndexBuffer9* C2DBuffer::iBuff=NULL;
+    tComPtr<IDirect3DVertexBuffer9> C2DBuffer::vBuff;
+    tComPtr<IDirect3DIndexBuffer9> C2DBuffer::iBuff;
     int C2DBuffer::BatchNum = 120;
     int C2DBuffer::scH = 600;
     int C2DBuffer::scW = 800;
@@ -66,11 +66,11 @@
 	// 共通頂点バッファ作成
 	void C2DBuffer::begin_first( IDirect3DDevice9* dev ) {
         HRESULT hr; 
-        if(NULL==vBuff)
-            dev->CreateVertexBuffer(BatchNum* 4*sizeof(tagVertexFMT),0,0,D3DPOOL_MANAGED,&C2DBuffer::vBuff,0);
-        if(NULL==iBuff)
+        if(NULL==vBuff.GetPtr())
+            dev->CreateVertexBuffer(BatchNum* 4*sizeof(tagVertexFMT),0,0,D3DPOOL_MANAGED,vBuff.ToCreator(),0);
+        if(NULL==iBuff.GetPtr())
             dev->CreateIndexBuffer(BatchNum*2*3*sizeof(WORD),0,D3DFMT_INDEX16,
-            D3DPOOL_MANAGED,&C2DBuffer::iBuff,0);
+            D3DPOOL_MANAGED,iBuff.ToCreator(),0);
 
 		// シェーダ作成
 		if (effect == 0) {
@@ -92,10 +92,10 @@
 			dev->CreateVertexDeclaration( elems, &decl );
 		}
         tagVertexFMT* pVFMT;
-        hr = iBuff->Lock(0,NULL,(void**)&pVFMT,0);
+        hr = iBuff.GetPtr()->Lock(0,NULL,(void**)&pVFMT,0);
         if(FAILED(hr))
-         {
-             iBuff->Release();
+        {
+            return;
         }
         else{
         }
