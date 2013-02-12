@@ -108,8 +108,6 @@
 			effect->Release();
 		if (decl)
 			decl->Release();
-        if(vBuff)
-            vBuff->Release();
 	}
 
 	// 板ポリサイズ指定
